@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { Eye, EyeOff, Mail, Lock, Github, ArrowLeft } from 'lucide-react';
@@ -143,7 +142,7 @@ const SignIn: React.FC = () => {
               type="button" 
               className="w-full flex items-center justify-center gap-2 border border-slate-300 py-2.5 px-4 rounded-lg font-medium text-slate-700 hover:bg-slate-50"
             >
-              <GitHub size={18} />
+              <Github size={18} />
               GitHub
             </button>
             
