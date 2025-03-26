@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Play, Clock, CheckCircle } from 'lucide-react';
+import { Play, Clock, CheckCircle, Lock } from 'lucide-react';
 
 interface LessonCardProps {
   id: string;
@@ -26,7 +26,7 @@ const LessonCard: React.FC<LessonCardProps> = ({
   };
   
   const statusIcons = {
-    locked: <div className="p-3 rounded-full bg-slate-200 text-slate-500"><Clock size={20} /></div>,
+    locked: <div className="p-3 rounded-full bg-slate-200 text-slate-500"><Lock size={20} /></div>,
     available: (
       <div className="p-3 rounded-full bg-blue/10 text-blue hover:bg-blue/20 transition-colors">
         <Play size={20} className="ml-0.5" />
@@ -51,6 +51,7 @@ const LessonCard: React.FC<LessonCardProps> = ({
       onClick={handleClick}
       role="button"
       aria-disabled={status === 'locked'}
+      data-lesson-id={id}
     >
       {statusIcons[status]}
       

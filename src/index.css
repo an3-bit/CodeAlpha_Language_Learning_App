@@ -5,7 +5,7 @@
 
 @layer base {
   :root {
-    --background: 210 40% 98%;
+    --background: 0 0% 100%;
     --foreground: 222.2 84% 4.9%;
 
     --card: 0 0% 100%;
@@ -14,7 +14,7 @@
     --popover: 0 0% 100%;
     --popover-foreground: 222.2 84% 4.9%;
 
-    --primary: 210 100% 50%;
+    --primary: 221.2 83.2% 53.3%;
     --primary-foreground: 210 40% 98%;
 
     --secondary: 210 40% 96.1%;
@@ -31,18 +31,9 @@
 
     --border: 214.3 31.8% 91.4%;
     --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    --ring: 221.2 83.2% 53.3%;
 
-    --radius: 0.75rem;
-
-    --sidebar-background: 0 0% 98%;
-    --sidebar-foreground: 240 5.3% 26.1%;
-    --sidebar-primary: 240 5.9% 10%;
-    --sidebar-primary-foreground: 0 0% 98%;
-    --sidebar-accent: 240 4.8% 95.9%;
-    --sidebar-accent-foreground: 240 5.9% 10%;
-    --sidebar-border: 220 13% 91%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --radius: 0.5rem;
   }
 
   .dark {
@@ -55,7 +46,7 @@
     --popover: 222.2 84% 4.9%;
     --popover-foreground: 210 40% 98%;
 
-    --primary: 210 40% 98%;
+    --primary: 217.2 91.2% 59.8%;
     --primary-foreground: 222.2 47.4% 11.2%;
 
     --secondary: 217.2 32.6% 17.5%;
@@ -72,15 +63,7 @@
 
     --border: 217.2 32.6% 17.5%;
     --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
-    --sidebar-background: 240 5.9% 10%;
-    --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 224.3 76.3% 48%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --ring: 224.3 76.3% 48%;
   }
 }
 
@@ -88,47 +71,58 @@
   * {
     @apply border-border;
   }
-
   body {
-    @apply bg-background text-foreground antialiased selection:bg-blue-light/20 selection:text-blue-dark;
-    font-feature-settings: "ss01", "ss02", "cv01", "cv02";
-  }
-
-  h1, h2, h3, h4, h5, h6 {
-    @apply font-medium tracking-tight;
-  }
-
-  h1 {
-    @apply text-4xl sm:text-5xl md:text-6xl;
-  }
-
-  h2 {
-    @apply text-3xl sm:text-4xl;
-  }
-
-  h3 {
-    @apply text-2xl sm:text-3xl;
+    @apply bg-background text-foreground;
   }
 }
 
-@layer components {
-  .glass-card {
-    @apply bg-white/80 backdrop-blur-lg shadow-sm border border-white/30 rounded-2xl;
-  }
-  
-  .button-primary {
-    @apply bg-blue py-3 px-8 rounded-full font-medium text-white shadow-sm transition-all duration-300 hover:shadow-md hover:bg-blue-dark active:scale-[0.98];
-  }
+/* Gamification animations */
+@keyframes fall-1 {
+  0% { transform: translate(-100px, -100px); opacity: 0; }
+  10% { opacity: 1; }
+  100% { transform: translate(100px, 400px) rotate(360deg); opacity: 0; }
+}
 
-  .page-container {
-    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 animate-fade-in;
-  }
-  
-  .text-gradient {
-    @apply bg-gradient-to-r from-blue to-blue-light bg-clip-text text-transparent;
-  }
+@keyframes fall-2 {
+  0% { transform: translate(50px, -150px); opacity: 0; }
+  10% { opacity: 1; }
+  100% { transform: translate(-150px, 500px) rotate(-360deg); opacity: 0; }
+}
 
-  .link-effect {
-    @apply relative after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-0 after:bg-blue after:transition-all after:duration-300 hover:after:w-full;
-  }
+@keyframes fall-3 {
+  0% { transform: translate(150px, -120px); opacity: 0; }
+  10% { opacity: 1; }
+  100% { transform: translate(200px, 450px) rotate(720deg); opacity: 0; }
+}
+
+@keyframes fall-4 {
+  0% { transform: translate(-200px, -80px); opacity: 0; }
+  10% { opacity: 1; }
+  100% { transform: translate(-50px, 400px) rotate(-720deg); opacity: 0; }
+}
+
+@keyframes fall-5 {
+  0% { transform: translate(0, -200px); opacity: 0; }
+  10% { opacity: 1; }
+  100% { transform: translate(0, 500px) rotate(360deg); opacity: 0; }
+}
+
+.animate-fall-1 {
+  animation: fall-1 3s ease-in-out forwards;
+}
+
+.animate-fall-2 {
+  animation: fall-2 2.7s ease-in-out forwards;
+}
+
+.animate-fall-3 {
+  animation: fall-3 3.2s ease-in-out forwards;
+}
+
+.animate-fall-4 {
+  animation: fall-4 2.5s ease-in-out forwards;
+}
+
+.animate-fall-5 {
+  animation: fall-5 3.5s ease-in-out forwards;
 }
