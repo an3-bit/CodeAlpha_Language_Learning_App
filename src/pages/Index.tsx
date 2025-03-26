@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Code, Feather, Coffee, Codepen, Cpu } from 'lucide-react';
+import { Code, Feather, Coffee, Codepen, Cpu, Play } from 'lucide-react';
 import NavigationHeader from '../components/NavigationHeader';
 import LandingHero from '../components/LandingHero';
 import LanguageCard from '../components/LanguageCard';
@@ -71,8 +71,8 @@ const Index: React.FC = () => {
               <LanguageCard
                 key={language.id}
                 {...language}
-                className="animate-fade-in"
-                style={{ animationDelay: `${(index + 1) * 100}ms` }}
+                className={`animate-fade-in`}
+                animationDelay={`${(index + 1) * 100}ms`}
               />
             ))}
           </div>
