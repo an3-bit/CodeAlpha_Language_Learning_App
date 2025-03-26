@@ -1,9 +1,10 @@
 
 import React, { useEffect, useState } from 'react';
-import { ArrowLeft, ArrowRight, CheckCircle, Clock, Star } from 'lucide-react';
+import { ArrowLeft, ArrowRight, CheckCircle, Clock, Star, XCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { toast } from '@/hooks/use-toast';
+import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
 
 interface LessonViewProps {
   lessonId: string;
@@ -39,6 +40,8 @@ const LessonView: React.FC<LessonViewProps> = ({
   const [userAnswers, setUserAnswers] = useState<Record<number, number>>({});
   const [earnedPoints, setEarnedPoints] = useState(0);
   const [confetti, setConfetti] = useState(false);
+  const [quizError, setQuizError] = useState<string | null>(null);
+  const [canProceed, setCanProceed] = useState(true);
   
   useEffect(() => {
     // Calculate progress based on current section
@@ -47,6 +50,26 @@ const LessonView: React.FC<LessonViewProps> = ({
   }, [currentSection, content.sections.length]);
   
   const handleNextSection = () => {
+    // Check if current section is a quiz and requires a correct answer
+    const currentSectionData = content.sections[currentSection];
+    
+    if (currentSectionData.type === 'quiz') {
+      // If it's a quiz, check if user answered it
+      if (userAnswers[currentSection] === undefined) {
+        setQuizError("Please select an answer before proceeding.");
+        return;
+      }
+      
+      // If user answered incorrectly, don't allow proceeding
+      if (userAnswers[currentSection] !== currentSectionData.answer) {
+        setQuizError("Please select the correct answer to proceed.");
+        return;
+      }
+    }
+    
+    // Clear any previous error
+    setQuizError(null);
+    
     if (currentSection < content.sections.length - 1) {
       setCurrentSection(prev => prev + 1);
     } else {
@@ -62,6 +85,7 @@ const LessonView: React.FC<LessonViewProps> = ({
   };
   
   const handlePreviousSection = () => {
+    setQuizError(null);
     if (currentSection > 0) {
       setCurrentSection(prev => prev - 1);
     }
@@ -71,14 +95,43 @@ const LessonView: React.FC<LessonViewProps> = ({
     const section = content.sections[sectionIndex];
     setUserAnswers({ ...userAnswers, [sectionIndex]: answerIndex });
     
-    if (section.type === 'quiz' && section.answer === answerIndex) {
-      // Correct answer
-      setEarnedPoints(prev => prev + 10);
-      toast({
-        title: "Correct!",
-        description: "Great job! You earned 10 points",
-      });
+    if (section.type === 'quiz') {
+      if (section.answer === answerIndex) {
+        // Correct answer
+        setEarnedPoints(prev => prev + 10);
+        setQuizError(null);
+        setCanProceed(true);
+        toast({
+          title: "Correct!",
+          description: "Great job! You earned 10 points",
+        });
+      } else {
+        // Incorrect answer
+        setQuizError("That's not correct. Try again!");
+        setCanProceed(false);
+        toast({
+          title: "Incorrect",
+          description: "Please try again",
+          variant: "destructive",
+        });
+      }
     }
+  };
+  
+  const handleNextModule = () => {
+    // Check if the last section is a quiz and requires a correct answer
+    const lastSection = content.sections[content.sections.length - 1];
+    
+    if (lastSection.type === 'quiz') {
+      // If user hasn't answered or answered incorrectly, don't allow proceeding
+      if (userAnswers[content.sections.length - 1] === undefined || 
+          userAnswers[content.sections.length - 1] !== lastSection.answer) {
+        setQuizError("Please answer the question correctly to proceed to the next module.");
+        return;
+      }
+    }
+    
+    onNext();
   };
   
   const renderSection = (section: any, index: number) => {
@@ -119,9 +172,19 @@ const LessonView: React.FC<LessonViewProps> = ({
                   {userAnswers[index] === optionIndex && userAnswers[index] === section.answer && (
                     <CheckCircle className="inline ml-2" size={16} />
                   )}
+                  {userAnswers[index] === optionIndex && userAnswers[index] !== section.answer && (
+                    <XCircle className="inline ml-2" size={16} />
+                  )}
                 </button>
               ))}
             </div>
+            
+            {quizError && index === currentSection && (
+              <Alert variant="destructive" className="mt-4">
+                <AlertTitle>Error</AlertTitle>
+                <AlertDescription>{quizError}</AlertDescription>
+              </Alert>
+            )}
           </div>
         );
       default:
@@ -198,7 +261,11 @@ const LessonView: React.FC<LessonViewProps> = ({
                 <ArrowRight size={16} className="ml-2" />
               </Button>
             ) : (
-              <Button onClick={onNext}>
+              <Button 
+                onClick={handleNextModule}
+                disabled={!canProceed}
+                className={!canProceed ? "opacity-50 cursor-not-allowed" : ""}
+              >
                 Next Module
                 <ArrowRight size={16} className="ml-2" />
               </Button>
