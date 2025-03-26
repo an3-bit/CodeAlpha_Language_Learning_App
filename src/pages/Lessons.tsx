@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { ArrowLeft, BookOpen, CheckCircle, Clock, Code } from 'lucide-react';
+import { ArrowLeft, BookOpen, CheckCircle, Clock, Code, Coffee, Cpu, Codepen } from 'lucide-react';
 import NavigationHeader from '../components/NavigationHeader';
 import LessonCard from '../components/LessonCard';
 import ProgressBar from '../components/ProgressBar';

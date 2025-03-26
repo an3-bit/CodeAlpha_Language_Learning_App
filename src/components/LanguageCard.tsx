@@ -14,6 +14,7 @@ interface LanguageCardProps {
   color: 'blue' | 'coral' | 'jade' | 'purple';
   className?: string;
   animationDelay?: string;
+  imageSrc?: string;
 }
 
 const LanguageCard: React.FC<LanguageCardProps> = ({
@@ -26,6 +27,7 @@ const LanguageCard: React.FC<LanguageCardProps> = ({
   color,
   className = '',
   animationDelay,
+  imageSrc,
 }) => {
   const navigate = useNavigate();
   
@@ -41,10 +43,24 @@ const LanguageCard: React.FC<LanguageCardProps> = ({
       role="button"
       tabIndex={0}
     >
-      <div className="p-6">
-        <div className={`w-12 h-12 flex items-center justify-center rounded-lg mb-4 bg-${color}/10 text-${color}`}>
-          {icon}
+      {/* Image Header */}
+      {imageSrc && (
+        <div className="w-full h-40 overflow-hidden">
+          <img 
+            src={imageSrc} 
+            alt={`${title} programming`} 
+            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+          />
+          <div className={`absolute top-0 left-0 w-full h-40 bg-gradient-to-b from-${color}/30 to-transparent opacity-60`}></div>
         </div>
+      )}
+      
+      <div className="p-6">
+        {!imageSrc && (
+          <div className={`w-12 h-12 flex items-center justify-center rounded-lg mb-4 bg-${color}/10 text-${color}`}>
+            {icon}
+          </div>
+        )}
         
         <h3 className="text-xl font-semibold mb-2">{title}</h3>
         <p className="text-slate-600 text-sm mb-6">{description}</p>

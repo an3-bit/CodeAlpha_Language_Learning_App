@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Code, Feather, Coffee, Codepen, Cpu, Play } from 'lucide-react';
@@ -18,6 +17,7 @@ const Index: React.FC = () => {
       totalLessons: 24,
       progress: 0,
       color: 'blue' as const,
+      imageSrc: 'https://images.pexels.com/photos/1181671/pexels-photo-1181671.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2'
     },
     {
       id: 'java',
@@ -27,6 +27,7 @@ const Index: React.FC = () => {
       totalLessons: 30,
       progress: 0,
       color: 'coral' as const,
+      imageSrc: 'https://images.pexels.com/photos/169573/pexels-photo-169573.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2'
     },
     {
       id: 'kotlin',
@@ -36,6 +37,7 @@ const Index: React.FC = () => {
       totalLessons: 20,
       progress: 0,
       color: 'jade' as const,
+      imageSrc: 'https://images.pexels.com/photos/577585/pexels-photo-577585.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2'
     },
     {
       id: 'react',
@@ -45,6 +47,7 @@ const Index: React.FC = () => {
       totalLessons: 28,
       progress: 0,
       color: 'purple' as const,
+      imageSrc: 'https://images.pexels.com/photos/11035380/pexels-photo-11035380.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2'
     },
   ];
 
