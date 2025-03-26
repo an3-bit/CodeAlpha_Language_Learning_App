@@ -25,13 +25,26 @@ const Lessons: React.FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const [selectedLanguage, setSelectedLanguage] = useState<string | null>(null);
+  const [shouldRedirect, setShouldRedirect] = useState(false);
   
   // Parse the language from URL query params
   useEffect(() => {
     const params = new URLSearchParams(location.search);
     const language = params.get('language');
     setSelectedLanguage(language);
+    
+    // Only set redirect flag if there's no language parameter
+    if (!language) {
+      setShouldRedirect(true);
+    }
   }, [location.search]);
+  
+  // Handle redirect in a separate useEffect
+  useEffect(() => {
+    if (shouldRedirect) {
+      navigate('/');
+    }
+  }, [shouldRedirect, navigate]);
   
   // Get language specific info
   const getLanguageInfo = () => {
@@ -181,9 +194,8 @@ const Lessons: React.FC = () => {
     // navigate(`/lesson/${lessonId}`);
   };
   
-  // Return to home if no language selected
-  if (!selectedLanguage) {
-    navigate('/');
+  // If still loading or waiting for redirect, show a loading state
+  if (shouldRedirect) {
     return null;
   }
 
