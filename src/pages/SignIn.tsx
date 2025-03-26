@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { Eye, EyeOff, Mail, Lock, GitHub, ArrowLeft } from 'lucide-react';
+import { Eye, EyeOff, Mail, Lock, Github, ArrowLeft } from 'lucide-react';
 import { toast } from '@/components/ui/use-toast';
 
 const SignIn: React.FC = () => {
