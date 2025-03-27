@@ -21,7 +21,7 @@ const NavigationHeader: React.FC = () => {
               aria-label="Home"
             >
               <Code size={28} className="text-blue" />
-              <span>CodeLingo</span>
+              <span>CodeLang</span>
             </Link>
           </div>
           

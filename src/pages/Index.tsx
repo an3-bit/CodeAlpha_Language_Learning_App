@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Code, Feather, Coffee, Codepen, Cpu, Play } from 'lucide-react';
@@ -85,7 +86,7 @@ const Index: React.FC = () => {
           <div className="max-w-7xl mx-auto">
             <div className="text-center mb-16 animate-fade-in">
               <h2 className="text-3xl md:text-4xl font-bold tracking-tight text-slate-900 mb-4">
-                Why Learn With CodeLingo?
+                Why Learn With CodeLang?
               </h2>
               <p className="text-lg text-slate-600 max-w-2xl mx-auto">
                 Our platform combines effective learning methods with modern technology 
@@ -147,14 +148,14 @@ const Index: React.FC = () => {
             </div>
             
             <div className="md:w-1/2 p-6 rounded-2xl bg-slate-50 shadow-sm border border-slate-200 animate-fade-in" style={{ animationDelay: '200ms' }}>
-              <div className="aspect-video rounded-lg bg-white shadow-sm border border-slate-200 flex items-center justify-center">
-                <div className="text-center p-8">
-                  <div className="w-16 h-16 mx-auto flex items-center justify-center rounded-full bg-blue/10 text-blue mb-4 animate-pulse-gentle">
-                    <Play size={32} className="ml-1" />
-                  </div>
-                  <h4 className="font-medium text-lg mb-2">See how it works</h4>
-                  <p className="text-slate-500 text-sm">Click to watch an introduction to our learning platform</p>
-                </div>
+              <div className="aspect-video rounded-lg bg-white shadow-sm border border-slate-200 overflow-hidden">
+                <iframe 
+                  className="w-full h-full"
+                  src="https://www.youtube.com/embed/rfscVS0vtbw" 
+                  title="Learn to code with CodeLang"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                  allowFullScreen
+                ></iframe>
               </div>
             </div>
           </div>
@@ -166,7 +167,7 @@ const Index: React.FC = () => {
           <div className="flex flex-col md:flex-row justify-between items-center mb-8">
             <div className="flex items-center mb-6 md:mb-0">
               <Code size={28} className="text-blue-light mr-2" />
-              <span className="text-xl font-semibold text-white">CodeLingo</span>
+              <span className="text-xl font-semibold text-white">CodeLang</span>
             </div>
             
             <div className="flex space-x-6">
@@ -179,7 +180,7 @@ const Index: React.FC = () => {
           
           <div className="border-t border-slate-800 pt-8 flex flex-col md:flex-row justify-between items-center">
             <p className="text-sm text-slate-400 mb-4 md:mb-0">
-              © {new Date().getFullYear()} CodeLingo. All rights reserved.
+              © {new Date().getFullYear()} CodeLang. All rights reserved.
             </p>
             
             <div className="flex space-x-6">
