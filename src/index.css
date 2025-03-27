@@ -76,6 +76,16 @@
   }
 }
 
+@layer components {
+  .button-primary {
+    @apply bg-blue-dark hover:bg-blue-light text-white font-medium py-3 px-8 rounded-full transition-all duration-300 shadow-lg hover:shadow-xl flex items-center justify-center gap-2 active:scale-[0.98];
+  }
+  
+  .text-gradient {
+    @apply bg-gradient-to-r from-blue-light to-white bg-clip-text text-transparent;
+  }
+}
+
 /* Gamification animations */
 @keyframes fall-1 {
   0% { transform: translate(-100px, -100px); opacity: 0; }
