@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { ArrowLeft, BookOpen, CheckCircle, Clock, Code, Coffee, Cpu, Codepen } from 'lucide-react';
@@ -28,30 +27,25 @@ const Lessons: React.FC = () => {
   const [activeModuleId, setActiveModuleId] = useState<string | null>(null);
   const [lessonContent, setLessonContent] = useState<any>(null);
   
-  // Parse the language from URL query params
   useEffect(() => {
     const params = new URLSearchParams(location.search);
     const language = params.get('language');
     setSelectedLanguage(language);
     
-    // Only set redirect flag if there's no language parameter
     if (!language) {
       setShouldRedirect(true);
     } else {
-      // Load modules for the selected language
       const languageModules = getLessonModules(language);
       setModules(languageModules);
     }
   }, [location.search]);
   
-  // Handle redirect in a separate useEffect
   useEffect(() => {
     if (shouldRedirect) {
       navigate('/');
     }
   }, [shouldRedirect, navigate]);
   
-  // Get language specific info
   const getLanguageInfo = () => {
     switch (selectedLanguage) {
       case 'python':
@@ -104,18 +98,15 @@ const Lessons: React.FC = () => {
   
   const languageInfo = getLanguageInfo();
   
-  // Handle lesson click
   const handleLessonClick = (lessonId: string, moduleId: string) => {
     setActiveLessonId(lessonId);
     setActiveModuleId(moduleId);
-    const content = getLessonContent(lessonId);
+    const content = getLessonContent(lessonId, selectedLanguage || undefined);
     setLessonContent(content);
   };
   
-  // Handle lesson completion
   const handleLessonComplete = (lessonId: string) => {
     completeLesson(lessonId);
-    // Refresh modules to update statuses
     if (selectedLanguage) {
       const updatedModules = getLessonModules(selectedLanguage);
       setModules(updatedModules);
@@ -126,16 +117,14 @@ const Lessons: React.FC = () => {
     });
   };
   
-  // Handle navigation to next lesson
   const handleNextLesson = () => {
     if (selectedLanguage && activeLessonId && activeModuleId) {
       const nextLesson = getNextLesson(selectedLanguage, activeModuleId, activeLessonId);
       if (nextLesson) {
         setActiveLessonId(nextLesson.lessonId);
         setActiveModuleId(nextLesson.moduleId);
-        setLessonContent(getLessonContent(nextLesson.lessonId));
+        setLessonContent(getLessonContent(nextLesson.lessonId, selectedLanguage));
       } else {
-        // No more lessons
         setActiveLessonId(null);
         setActiveModuleId(null);
         setLessonContent(null);
@@ -147,14 +136,13 @@ const Lessons: React.FC = () => {
     }
   };
   
-  // Handle navigation to previous lesson
   const handlePreviousLesson = () => {
     if (selectedLanguage && activeLessonId && activeModuleId) {
       const prevLesson = getPreviousLesson(selectedLanguage, activeModuleId, activeLessonId);
       if (prevLesson) {
         setActiveLessonId(prevLesson.lessonId);
         setActiveModuleId(prevLesson.moduleId);
-        setLessonContent(getLessonContent(prevLesson.lessonId));
+        setLessonContent(getLessonContent(prevLesson.lessonId, selectedLanguage));
       } else {
         toast({
           title: "First lesson",
@@ -164,16 +152,13 @@ const Lessons: React.FC = () => {
     }
   };
   
-  // Close the lesson view
   const handleCloseLessonView = () => {
     setActiveLessonId(null);
     setActiveModuleId(null);
     setLessonContent(null);
   };
-
-  // Handle click on "continue learning" button
+  
   const handleContinueLearning = () => {
-    // Find the first available lesson that's not completed
     for (const module of modules) {
       for (const lesson of module.lessons) {
         if (lesson.status === 'available') {
@@ -182,15 +167,12 @@ const Lessons: React.FC = () => {
         }
       }
     }
-    
-    // If no available lesson found, show a message
     toast({
       title: "No available lessons",
       description: "All lessons are either completed or locked.",
     });
   };
   
-  // Handle previous module click
   const handlePreviousModule = () => {
     if (activeModuleId && selectedLanguage) {
       const currentModuleIndex = modules.findIndex(m => m.id === activeModuleId);
@@ -207,7 +189,6 @@ const Lessons: React.FC = () => {
     }
   };
   
-  // Handle next module click
   const handleNextModule = () => {
     if (activeModuleId && selectedLanguage) {
       const currentModuleIndex = modules.findIndex(m => m.id === activeModuleId);
@@ -231,12 +212,10 @@ const Lessons: React.FC = () => {
     }
   };
   
-  // If still loading or waiting for redirect, show a loading state
   if (shouldRedirect) {
     return null;
   }
   
-  // Calculate completion statistics
   const completedLessons = modules.flatMap(module => 
     module.lessons.filter(lesson => lesson.status === 'completed')
   ).length;
@@ -261,7 +240,6 @@ const Lessons: React.FC = () => {
       ) : (
         <main className="pt-20 pb-24 animate-fade-in">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            {/* Language Header */}
             <div className="py-8 mb-8 border-b">
               <button 
                 onClick={() => navigate('/')}
@@ -316,7 +294,6 @@ const Lessons: React.FC = () => {
               </div>
             </div>
             
-            {/* Modules & Lessons */}
             <div className="grid grid-cols-1 gap-12">
               {modules.map((module, moduleIndex) => (
                 <div key={module.id} className="animate-fade-in" style={{ animationDelay: `${moduleIndex * 100}ms` }}>
