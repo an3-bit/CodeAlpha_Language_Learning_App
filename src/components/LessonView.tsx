@@ -121,18 +121,28 @@ const LessonView: React.FC<LessonViewProps> = ({
   };
   
   const handleNextModule = () => {
-    // Check if the last section is a quiz and requires a correct answer
+    // Check if the last section is a quiz
     const lastSection = content.sections[content.sections.length - 1];
     
+    // If it's a quiz section, check if the answer is correct
     if (lastSection.type === 'quiz') {
-      // If user hasn't answered or answered incorrectly, don't allow proceeding
-      if (userAnswers[content.sections.length - 1] === undefined || 
-          userAnswers[content.sections.length - 1] !== lastSection.answer) {
+      const lastSectionIndex = content.sections.length - 1;
+      const userAnswer = userAnswers[lastSectionIndex];
+      
+      // If the user hasn't answered the question or answered incorrectly
+      if (userAnswer === undefined) {
+        setQuizError("Please answer the question before proceeding to the next module.");
+        return;
+      }
+      
+      if (userAnswer !== lastSection.answer) {
         setQuizError("Please answer the question correctly to proceed to the next module.");
         return;
       }
     }
     
+    // If we reach here, the user can proceed to the next module
+    setQuizError(null);
     onNext();
   };
   
@@ -274,7 +284,6 @@ const LessonView: React.FC<LessonViewProps> = ({
               <Button 
                 onClick={handleNextModule}
                 disabled={!canProceed}
-                className={!canProceed ? "opacity-50 cursor-not-allowed" : ""}
               >
                 Next Module
                 <ArrowRight size={16} className="ml-2" />
