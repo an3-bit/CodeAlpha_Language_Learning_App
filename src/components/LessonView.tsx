@@ -93,6 +93,8 @@ const LessonView: React.FC<LessonViewProps> = ({
   
   const handleQuizAnswer = (sectionIndex: number, answerIndex: number) => {
     const section = content.sections[sectionIndex];
+    
+    // Update the user's answer
     setUserAnswers({ ...userAnswers, [sectionIndex]: answerIndex });
     
     if (section.type === 'quiz') {
@@ -155,28 +157,36 @@ const LessonView: React.FC<LessonViewProps> = ({
           <div className="py-4">
             <p className="text-slate-700 font-medium mb-4">{section.content}</p>
             <div className="space-y-2">
-              {section.options?.map((option, optionIndex) => (
-                <button
-                  key={optionIndex}
-                  className={`w-full text-left p-3 rounded-lg border transition-colors ${
-                    userAnswers[index] === optionIndex
-                      ? userAnswers[index] === section.answer
-                        ? 'bg-jade/10 border-jade text-jade'
-                        : 'bg-red/10 border-red text-red'
-                      : 'border-slate-200 hover:border-blue/30'
-                  }`}
-                  onClick={() => handleQuizAnswer(index, optionIndex)}
-                  disabled={userAnswers[index] !== undefined}
-                >
-                  {option}
-                  {userAnswers[index] === optionIndex && userAnswers[index] === section.answer && (
-                    <CheckCircle className="inline ml-2" size={16} />
-                  )}
-                  {userAnswers[index] === optionIndex && userAnswers[index] !== section.answer && (
-                    <XCircle className="inline ml-2" size={16} />
-                  )}
-                </button>
-              ))}
+              {section.options?.map((option, optionIndex) => {
+                // Determine if this answer is correct or incorrect
+                const isSelected = userAnswers[index] === optionIndex;
+                const isCorrect = section.answer === optionIndex;
+                const isIncorrect = isSelected && !isCorrect;
+                
+                return (
+                  <button
+                    key={optionIndex}
+                    className={`w-full text-left p-3 rounded-lg border transition-colors ${
+                      isSelected
+                        ? isCorrect
+                          ? 'bg-jade/10 border-jade text-jade'
+                          : 'bg-red/10 border-red text-red'
+                        : 'border-slate-200 hover:border-blue/30'
+                    }`}
+                    onClick={() => handleQuizAnswer(index, optionIndex)}
+                    // Only disable the button if it's the correct answer that was selected
+                    disabled={isSelected && isCorrect}
+                  >
+                    {option}
+                    {isSelected && isCorrect && (
+                      <CheckCircle className="inline ml-2" size={16} />
+                    )}
+                    {isSelected && isIncorrect && (
+                      <XCircle className="inline ml-2" size={16} />
+                    )}
+                  </button>
+                );
+              })}
             </div>
             
             {quizError && index === currentSection && (
