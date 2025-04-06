@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { ArrowLeft, BookOpen, CheckCircle, Clock, Code, Coffee, Cpu, Codepen } from 'lucide-react';
 import NavigationHeader from '../components/NavigationHeader';
 import LessonCard from '../components/LessonCard';
@@ -33,18 +33,14 @@ const Lessons: React.FC = () => {
     setSelectedLanguage(language);
     
     if (!language) {
-      setShouldRedirect(true);
+      const defaultLanguages = ['python', 'java', 'kotlin', 'react'];
+      const pythonModules = getLessonModules('python');
+      setModules(pythonModules);
     } else {
       const languageModules = getLessonModules(language);
       setModules(languageModules);
     }
   }, [location.search]);
-  
-  useEffect(() => {
-    if (shouldRedirect) {
-      navigate('/');
-    }
-  }, [shouldRedirect, navigate]);
   
   const getLanguageInfo = () => {
     switch (selectedLanguage) {
@@ -95,8 +91,6 @@ const Lessons: React.FC = () => {
         };
     }
   };
-  
-  const languageInfo = getLanguageInfo();
   
   const handleLessonClick = (lessonId: string, moduleId: string) => {
     setActiveLessonId(lessonId);
@@ -212,9 +206,7 @@ const Lessons: React.FC = () => {
     }
   };
   
-  if (shouldRedirect) {
-    return null;
-  }
+  const languageInfo = getLanguageInfo();
   
   const completedLessons = modules.flatMap(module => 
     module.lessons.filter(lesson => lesson.status === 'completed')
@@ -222,6 +214,38 @@ const Lessons: React.FC = () => {
   
   const totalLessons = modules.flatMap(module => module.lessons).length;
   const userProgress = getUserProgress();
+
+  const renderLanguageSelection = () => {
+    const languages = [
+      { id: 'python', name: 'Python', icon: <Code size={24} />, color: 'blue' },
+      { id: 'java', name: 'Java', icon: <Coffee size={24} />, color: 'coral' },
+      { id: 'kotlin', name: 'Kotlin', icon: <Cpu size={24} />, color: 'jade' },
+      { id: 'react', name: 'React', icon: <Codepen size={24} />, color: 'purple' }
+    ];
+
+    return (
+      <div className="py-12">
+        <h2 className="text-2xl font-bold mb-8 text-center">
+          Select a language to start learning
+        </h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-4xl mx-auto">
+          {languages.map(language => (
+            <div 
+              key={language.id}
+              onClick={() => navigate(`/lessons?language=${language.id}`)}
+              className={`p-6 rounded-lg bg-white shadow-md hover:shadow-lg cursor-pointer border-2 border-${language.color}/20 hover:border-${language.color} transition-all`}
+            >
+              <div className={`p-3 rounded-full bg-${language.color}/10 inline-block mb-4`}>
+                {language.icon}
+              </div>
+              <h3 className="text-lg font-bold">{language.name}</h3>
+              <p className="text-sm text-slate-500">Click to view lessons</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  };
 
   return (
     <div className="min-h-screen bg-white">
@@ -240,82 +264,88 @@ const Lessons: React.FC = () => {
       ) : (
         <main className="pt-20 pb-24 animate-fade-in">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="py-8 mb-8 border-b">
-              <button 
-                onClick={() => navigate('/')}
-                className="inline-flex items-center text-slate-600 hover:text-blue mb-6 transition-colors"
-              >
-                <ArrowLeft size={16} className="mr-2" />
-                Back to Languages
-              </button>
-              
-              <div className="flex items-start gap-6">
-                <div className={`p-4 rounded-xl bg-${languageInfo.color}/10 text-${languageInfo.color}`}>
-                  {languageInfo.icon}
-                </div>
-                
-                <div className="flex-1">
-                  <h1 className="text-3xl font-bold mb-2">{languageInfo.title}</h1>
-                  <p className="text-slate-600 mb-4">{languageInfo.description}</p>
+            {selectedLanguage ? (
+              <>
+                <div className="py-8 mb-8 border-b">
+                  <button 
+                    onClick={() => navigate('/')}
+                    className="inline-flex items-center text-slate-600 hover:text-blue mb-6 transition-colors"
+                  >
+                    <ArrowLeft size={16} className="mr-2" />
+                    Back to Languages
+                  </button>
                   
-                  <div className="flex items-center gap-6 text-sm text-slate-500">
-                    <div className="flex items-center gap-2">
-                      <BookOpen size={16} />
-                      <span>{totalLessons} Lessons</span>
+                  <div className="flex items-start gap-6">
+                    <div className={`p-4 rounded-xl bg-${languageInfo.color}/10 text-${languageInfo.color}`}>
+                      {languageInfo.icon}
                     </div>
                     
-                    <div className="flex items-center gap-2">
-                      <Clock size={16} />
-                      <span>Approx. 15 hours</span>
+                    <div className="flex-1">
+                      <h1 className="text-3xl font-bold mb-2">{languageInfo.title}</h1>
+                      <p className="text-slate-600 mb-4">{languageInfo.description}</p>
+                      
+                      <div className="flex items-center gap-6 text-sm text-slate-500">
+                        <div className="flex items-center gap-2">
+                          <BookOpen size={16} />
+                          <span>{totalLessons} Lessons</span>
+                        </div>
+                        
+                        <div className="flex items-center gap-2">
+                          <Clock size={16} />
+                          <span>Approx. 15 hours</span>
+                        </div>
+                        
+                        <div className="flex items-center gap-2">
+                          <CheckCircle size={16} />
+                          <span>{completedLessons} Completed</span>
+                        </div>
+                      </div>
                     </div>
                     
-                    <div className="flex items-center gap-2">
-                      <CheckCircle size={16} />
-                      <span>{completedLessons} Completed</span>
+                    <div className="hidden md:block">
+                      <Button onClick={handleContinueLearning}>
+                        Continue Learning
+                      </Button>
                     </div>
+                  </div>
+                  
+                  <div className="mt-6">
+                    <ProgressBar 
+                      progress={completedLessons} 
+                      total={totalLessons} 
+                      color={languageInfo.color}
+                      size="lg"
+                      label="Course Progress"
+                    />
                   </div>
                 </div>
                 
-                <div className="hidden md:block">
-                  <Button onClick={handleContinueLearning}>
-                    Continue Learning
-                  </Button>
+                <div className="grid grid-cols-1 gap-12">
+                  {modules.map((module, moduleIndex) => (
+                    <div key={module.id} className="animate-fade-in" style={{ animationDelay: `${moduleIndex * 100}ms` }}>
+                      <div className="mb-6">
+                        <h2 className="text-2xl font-bold mb-2">
+                          Module {moduleIndex + 1}: {module.title}
+                        </h2>
+                        <p className="text-slate-600">{module.description}</p>
+                      </div>
+                      
+                      <div className="grid grid-cols-1 gap-4">
+                        {module.lessons.map((lesson, lessonIndex) => (
+                          <LessonCard 
+                            key={lesson.id}
+                            {...lesson}
+                            onClick={() => handleLessonClick(lesson.id, module.id)}
+                          />
+                        ))}
+                      </div>
+                    </div>
+                  ))}
                 </div>
-              </div>
-              
-              <div className="mt-6">
-                <ProgressBar 
-                  progress={completedLessons} 
-                  total={totalLessons} 
-                  color={languageInfo.color}
-                  size="lg"
-                  label="Course Progress"
-                />
-              </div>
-            </div>
-            
-            <div className="grid grid-cols-1 gap-12">
-              {modules.map((module, moduleIndex) => (
-                <div key={module.id} className="animate-fade-in" style={{ animationDelay: `${moduleIndex * 100}ms` }}>
-                  <div className="mb-6">
-                    <h2 className="text-2xl font-bold mb-2">
-                      Module {moduleIndex + 1}: {module.title}
-                    </h2>
-                    <p className="text-slate-600">{module.description}</p>
-                  </div>
-                  
-                  <div className="grid grid-cols-1 gap-4">
-                    {module.lessons.map((lesson, lessonIndex) => (
-                      <LessonCard 
-                        key={lesson.id}
-                        {...lesson}
-                        onClick={() => handleLessonClick(lesson.id, module.id)}
-                      />
-                    ))}
-                  </div>
-                </div>
-              ))}
-            </div>
+              </>
+            ) : (
+              renderLanguageSelection()
+            )}
           </div>
         </main>
       )}
