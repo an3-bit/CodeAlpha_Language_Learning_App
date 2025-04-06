@@ -6,6 +6,14 @@ import { Code, ArrowRight } from 'lucide-react';
 const LandingHero: React.FC = () => {
   const navigate = useNavigate();
 
+  // Function to scroll to language cards section
+  const scrollToLanguageCards = () => {
+    const languageSection = document.querySelector('#language-cards-section');
+    if (languageSection) {
+      languageSection.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   return (
     <div className="relative overflow-hidden">
       {/* Background image */}
@@ -45,7 +53,7 @@ const LandingHero: React.FC = () => {
             </button>
             
             <button 
-              onClick={() => {/* Scroll to language cards */}}
+              onClick={scrollToLanguageCards}
               className="py-3 px-8 rounded-full font-medium text-white bg-white/20 backdrop-blur-sm border border-white/30 transition-all duration-300 hover:bg-white/30 active:scale-[0.98] shadow-lg"
             >
               Explore Languages

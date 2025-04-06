@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Code, Feather, Coffee, Codepen, Cpu, Play } from 'lucide-react';
@@ -59,7 +58,7 @@ const Index: React.FC = () => {
       <main>
         <LandingHero />
         
-        <section className="py-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+        <section id="language-cards-section" className="py-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
           <div className="text-center mb-16 animate-fade-in">
             <h2 className="text-3xl md:text-4xl font-bold tracking-tight text-slate-900 mb-4">
               Choose Your Learning Path
